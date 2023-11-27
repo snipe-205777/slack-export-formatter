@@ -44,3 +44,4 @@ def log_formatter(channel, date):
 
     with open(output_file, "w") as f:
         f.write(logs)
+        print(f"Log produced: {output_file}")
