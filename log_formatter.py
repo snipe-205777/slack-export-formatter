@@ -2,13 +2,6 @@ import json
 import os
 import re
 
-channel = "bot"
-date = "2023-05-11"
-
-raw_file = f"raw_export/{channel}/{date}.json"
-output_dir = f"message_logs/{channel}"
-output_file = f"{output_dir}/{date}.txt"
-
 
 def get_username(id):
     with open(f"raw_export/users.json", "r") as u:
@@ -18,31 +11,36 @@ def get_username(id):
                 return user["name"]
 
 
-with open(raw_file, "r") as f:
-    logs = []
-    raw = json.load(f)
-    for message in raw:
-        if "subtype" in message.keys() and message["subtype"] == "channel_join":
-            logs.append(message["text"])
-        elif "user_profile" in message.keys():
-            logs.append(f'{message["user_profile"]["name"]}: {message["text"]}')
-        else:
-            logs.append(f'{message["bot_profile"]["name"]}: {message["text"]}')
+def log_formatter(channel, date):
+    raw_file = f"raw_export/{channel}/{date}.json"
+    output_dir = f"message_logs/{channel}"
+    output_file = f"{output_dir}/{date}.txt"
 
-logs = "\n".join(logs)
-ping_match = re.compile("<@(.*)>")
+    with open(raw_file, "r") as f:
+        logs = []
+        raw = json.load(f)
+        for message in raw:
+            if "subtype" in message.keys() and message["subtype"] == "channel_join":
+                logs.append(message["text"])
+            elif "user_profile" in message.keys():
+                logs.append(f'{message["user_profile"]["name"]}: {message["text"]}')
+            else:
+                logs.append(f'{message["bot_profile"]["name"]}: {message["text"]}')
 
-pings = ping_match.findall(logs)
+    logs = "\n".join(logs)
+    ping_match = re.compile("<@(.*)>")
 
-for ping in pings:
-    name = get_username(ping)
-    logs = logs.replace(ping, name)
+    pings = ping_match.findall(logs)
 
-if not os.path.isdir("message_logs"):
-    os.mkdir("message_logs")
+    for ping in pings:
+        name = get_username(ping)
+        logs = logs.replace(ping, name)
 
-if not os.path.isdir(output_dir):
-    os.mkdir(output_dir)
+    if not os.path.isdir("message_logs"):
+        os.mkdir("message_logs")
 
-with open(output_file, "w") as f:
-    f.write(logs)
+    if not os.path.isdir(output_dir):
+        os.mkdir(output_dir)
+
+    with open(output_file, "w") as f:
+        f.write(logs)
