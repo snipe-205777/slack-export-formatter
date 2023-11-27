@@ -16,4 +16,6 @@ This repo will strip down the lengthy json logs into files containing just usern
 
 1. Run the relevant log_formatter to get your stripped-down file(s). The output file(s) will be placed in the `message_logs` folder.
 
-    1. For messages from a single channel on a single day: Change the `channel` and `date` variables on lines 5 & 6 of `single_log_formatter.py` and to the required channel and date and then run `python3 single_log_formatter.py`
+    1. For messages from a single channel on a single day: Change the `channel` and `date` variables on lines 5 & 6 of `single_log_formatter.py` to the required channel and date and then run `python3 single_log_formatter.py`
+
+    1. For all messages from a single channel: Change the `channel` variable on line 6 of `channel_log_formatter.py` and then run `python3 channel_log_formatter.py`
